@@ -13,6 +13,10 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
   final HomeRepository _homeRepository;
   int page = 1;
   int perPage = 20;
+  int maxItems = 8000;
+
+  List<Photos> initialList = [];
+  List<Photos> newDataList = [];
 
   HomeScreenCubit(this._homeRepository) : super(HomeScreenInitial());
 
@@ -24,21 +28,21 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       emit(CategoryLoading());
       // #startRegion
       // before remote config
-      String data = await rootBundle.loadString('assets/raw/category.json');
-      final jsonResult = json.decode(data);
+      // String data = await rootBundle.loadString('assets/raw/category.json');
+      // final jsonResult = json.decode(data);
 
-      List<CategoryModel> categories = (jsonResult as List)
-          .map((categoryJson) => CategoryModel.fromJson(categoryJson))
-          .toList();
+      // List<CategoryModel> categories = (jsonResult as List)
+      // .map((categoryJson) => CategoryModel.fromJson(categoryJson))
+      // .toList();
       // #endRegion
-      // List<CategoryModel> response = ConfigManager.instance.getCategoryData();
+      List<CategoryModel> categories = await _homeRepository.fetchCategories();
       emit(CategoryLoaded(categories)); // Emit loaded state with categories
     } catch (e) {
       emit(CategoryError("Failed to load categories: ${e.toString()}"));
     }
   }
 
-  /// fetch wallpapers
+  /// fetch wallpapers without lazy loading
   Future<void> getPhotos() async {
     try {
       emit(LoadingHomeView());
@@ -54,6 +58,42 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       emit(ErrorHomeScreenView("Error loading photos: ${e.toString()}"));
     }
   }
+
+/*
+  Future<void> getPhotos({bool isInitialLoad = true}) async {
+    try {
+      if (isInitialLoad) {
+        emit(LoadingHomeView());
+      }
+
+      final ImageModel imageData =
+          await _homeRepository.fetchCuratedWallpapers(page, perPage);
+      debugPrint('Cubit log >>>>> ${imageData.photos}');
+
+      if (imageData.photos == null || imageData.photos!.isEmpty) {
+        emit(NoHomeScreenView());
+        return;
+      }
+
+      if (isInitialLoad) {
+        initialList = imageData.photos!;
+        emit(ReceivedHomeScreenView(initialList));
+      } else {
+        newDataList = imageData.photos!;
+        initialList.addAll(newDataList);
+        emit(ReceivedHomeScreenView(initialList));
+
+        // Stop fetching if received data is less than perPage
+        if (newDataList.length < perPage) {
+          return;
+        }
+      }
+
+      page++; // Increment page for the next load
+    } catch (e) {
+      emit(ErrorHomeScreenView("Error loading photos: ${e.toString()}"));
+    }
+  }*/
 
   void nextPage() {
     page++;

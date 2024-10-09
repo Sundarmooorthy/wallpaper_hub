@@ -76,18 +76,19 @@ Widget searchField({
 // water mark widget
 Widget waterMark() {
   return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          'Made with ❤️ by ',
-          style: AppTextStyle.semiBold14(color: Colors.black.withOpacity(0.7)),
-        ),
-        Text(
-          'Sundar',
-          style: AppTextStyle.bold14(color: Colors.black),
-        )
-      ]);
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Text(
+        'Made with ❤️ by ',
+        style: AppTextStyle.semiBold14(color: Colors.black.withOpacity(0.7)),
+      ),
+      Text(
+        ConfigManager.instance.getMyName(),
+        style: AppTextStyle.bold14(color: Colors.black),
+      )
+    ],
+  );
 }
 
 Widget Gap({double? height, double? width}) {

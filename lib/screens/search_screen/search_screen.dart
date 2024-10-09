@@ -142,6 +142,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget gridItem(int index) {
+    Size _size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -160,7 +161,25 @@ class _SearchScreenState extends State<SearchScreen> {
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         child: CachedNetworkImage(
-          imageUrl: photos[index].src?.medium ?? '',
+          imageUrl: photos[index].src?.original ?? '',
+          progressIndicatorBuilder: (
+            context,
+            url,
+            progress,
+          ) {
+            return Center(
+              // child: CircularProgressIndicator(
+              //   color: Colors.orange,
+              //   value: progress.progress != null
+              //       ? progress.totalSize! / progress.downloaded
+              //       : null,
+              // )
+              child: squareShimmer(
+                height: _size.height * 0.32,
+                width: double.infinity,
+              ),
+            );
+          },
           errorWidget: (context, url, error) => const Icon(Icons.error),
           fit: BoxFit.fill,
           width: double.infinity,

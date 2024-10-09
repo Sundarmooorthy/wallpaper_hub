@@ -18,8 +18,7 @@ class HomeRepository {
         compact: false,
       ),
     );
-    homeApiService =
-        HomeApiService(_dio, baseUrl: ApiConstant.baseUrl);
+    homeApiService = HomeApiService(_dio, baseUrl: ApiConstant.baseUrl);
   }
 
   Future<ImageModel> fetchCuratedWallpapers(int page, int perPage) async {
@@ -27,5 +26,9 @@ class HomeRepository {
       page,
       perPage,
     );
+  }
+
+  Future<List<CategoryModel>> fetchCategories() async {
+    return ConfigManager.instance.getCategoryData();
   }
 }

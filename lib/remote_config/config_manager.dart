@@ -24,15 +24,20 @@ class ConfigManager {
 
   /// get string
   String getBaseUrl() {
-    return remoteConfig.getString(ConfigStrings.BASE_URL);
+    return remoteConfig.getString(ConfigStrings.KEY_BASE_URL);
   }
 
   String getPexelApiKey() {
-    return remoteConfig.getString(ConfigStrings.PEXEL_API_KEY);
+    return remoteConfig.getString(ConfigStrings.KEY_PEXEL_API_KEY);
+  }
+
+  String getMyName() {
+    return remoteConfig.getString(ConfigStrings.KEY_MY_NAME);
   }
 
   List<CategoryModel> getCategoryData() {
-    var categoryDataJson = remoteConfig.getString(ConfigStrings.CATEGORY_DATA);
+    var categoryDataJson =
+        remoteConfig.getString(ConfigStrings.KEY_CATEGORY_DATA);
     List<dynamic> decodeData = jsonDecode(categoryDataJson);
     List<CategoryModel> data =
         decodeData.map((json) => CategoryModel.fromJson(json)).toList();

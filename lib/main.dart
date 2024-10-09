@@ -11,6 +11,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await ConfigManager.setUpRemoteConfig();
   runApp(const MyApp());
 }
 

@@ -35,9 +35,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: BlocListener<CategoryScreenCubit, CategoryScreenState>(
         listener: (context, state) {
@@ -98,72 +96,69 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         ),
                       ),
                     ],
-
                   )),
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (context, index) =>
+                (context, index) =>
                     BlocConsumer<CategoryScreenCubit, CategoryScreenState>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        if (state is LoadingCategoryView) {
-                          return buildShimmerGrid(
-                            itemCount: 20,
-                            child: squareShimmer(),
-                          );
-                        }
-                        if (state is NoCategoryView) {
-                          return Center(
-                            child: Text(
-                              'No Images Currently Available',
-                              style: AppTextStyle.semiBold20(
-                                  color: Colors.black),
-                            ),
-                          );
-                        }
-                        if (state is ErrorCategoryView) {
-                          return Center(child: Text(state.msg));
-                        }
-                        if (state is ReceivedCategoryView) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            // mainAxisSize: MainAxisSize.min,
-                            children: [
-                              GridView.builder(
-                                  padding: const EdgeInsets.only(
-                                    bottom: AppDimens.appVPadding20,
-                                    top: AppDimens.appVPadding20,
-                                    left: AppDimens.appHPadding10,
-                                    right: AppDimens.appHPadding10,
-                                  ),
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  gridDelegate:
+                  listener: (context, state) {},
+                  builder: (context, state) {
+                    if (state is LoadingCategoryView) {
+                      return buildShimmerGrid(
+                        itemCount: 20,
+                        child: squareShimmer(),
+                      );
+                    }
+                    if (state is NoCategoryView) {
+                      return Center(
+                        child: Text(
+                          'No Images Currently Available',
+                          style: AppTextStyle.semiBold20(color: Colors.black),
+                        ),
+                      );
+                    }
+                    if (state is ErrorCategoryView) {
+                      return Center(child: Text(state.msg));
+                    }
+                    if (state is ReceivedCategoryView) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        // mainAxisSize: MainAxisSize.min,
+                        children: [
+                          GridView.builder(
+                              padding: const EdgeInsets.only(
+                                bottom: AppDimens.appVPadding20,
+                                top: AppDimens.appVPadding20,
+                                left: AppDimens.appHPadding10,
+                                right: AppDimens.appHPadding10,
+                              ),
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 4 / 6.5,
-                                    crossAxisSpacing: AppDimens.appHPadding10,
-                                    mainAxisSpacing: AppDimens.appHPadding10,
-                                  ),
-                                  itemCount: photos.length,
-                                  itemBuilder: (BuildContext context,
-                                      int index) {
-                                    return gridItem(index);
-                                  }),
-                            ],
-                          );
-                        }
-                        return Container();
-                      },
-                      buildWhen: (previous, state) {
-                        return state is ReceivedCategoryView ||
-                            state is LoadingCategoryView ||
-                            state is NoCategoryView ||
-                            state is ErrorCategoryView;
-                      },
-                    ),
+                                crossAxisCount: 2,
+                                childAspectRatio: 4 / 6.5,
+                                crossAxisSpacing: AppDimens.appHPadding10,
+                                mainAxisSpacing: AppDimens.appHPadding10,
+                              ),
+                              itemCount: photos.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return gridItem(index);
+                              }),
+                        ],
+                      );
+                    }
+                    return Container();
+                  },
+                  buildWhen: (previous, state) {
+                    return state is ReceivedCategoryView ||
+                        state is LoadingCategoryView ||
+                        state is NoCategoryView ||
+                        state is ErrorCategoryView;
+                  },
+                ),
               ),
             ),
           ],
@@ -173,26 +168,44 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 
   Widget gridItem(int index) {
+    Size _size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                BlocProvider(
-                  create: (context) => ImageFullScreenCubit(),
-                  child: ImageFullScreen(
-                    photos: photos,
-                    imageUrl: photos[index].src?.large2x ?? '',
-                  ),
-                ),
+            builder: (context) => BlocProvider(
+              create: (context) => ImageFullScreenCubit(),
+              child: ImageFullScreen(
+                photos: photos,
+                imageUrl: photos[index].src?.large2x ?? '',
+              ),
+            ),
           ),
         );
       },
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         child: CachedNetworkImage(
-          imageUrl: photos[index].src?.medium ?? '',
+          imageUrl: photos[index].src?.original ?? '',
+          progressIndicatorBuilder: (
+            context,
+            url,
+            progress,
+          ) {
+            return Center(
+              // child: CircularProgressIndicator(
+              //   color: Colors.orange,
+              //   value: progress.progress != null
+              //       ? progress.totalSize! / progress.downloaded
+              //       : null,
+              // )
+              child: squareShimmer(
+                height: _size.height * 0.32,
+                width: double.infinity,
+              ),
+            );
+          },
           errorWidget: (context, url, error) => const Icon(Icons.error),
           fit: BoxFit.fill,
           width: double.infinity,

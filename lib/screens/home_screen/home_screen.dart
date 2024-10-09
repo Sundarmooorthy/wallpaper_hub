@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:wallpaper_hub/my_app_exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallpaper_hub/repository/repository.dart';
@@ -19,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<LiquidPullToRefreshState> _refreshIndicatorKey =
       GlobalKey<LiquidPullToRefreshState>();
-  ScrollController _scrollController = ScrollController();
   late HomeScreenCubit _cubit;
   List<CategoryModel> categories = [];
   List<Photos> photos = [];
@@ -36,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _cubit.close();
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -54,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
       body: BlocListener<HomeScreenCubit, HomeScreenState>(
         listener: (context, state) {
           if (state is ReceivedHomeScreenView) {
-            // test = state.testModel;
             imageModel = state.imageData;
             photos = state.imageData.photos!;
             debugPrint('images length >>>> ${photos.length}');
@@ -155,39 +153,38 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            GridView.builder(
-                                padding: const EdgeInsets.only(
-                                  bottom: AppDimens.appVPadding20,
-                                  top: 0,
-                                ),
-                                shrinkWrap: true,
-                                physics: const BouncingScrollPhysics(),
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 4 / 6.5,
-                                  crossAxisSpacing: AppDimens.appHPadding10,
-                                  mainAxisSpacing: AppDimens.appHPadding10,
-                                ),
-                                itemCount: photos.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return gridItem(index);
-                                }),
-                            if (categories.isNotEmpty)
+                            MasonryGridView.count(
+                              crossAxisSpacing: AppDimens.appHPadding10,
+                              mainAxisSpacing: AppDimens.appVPadding10,
+                              padding: const EdgeInsets.only(
+                                bottom: AppDimens.appVPadding20,
+                                top: 0,
+                              ),
+                              shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: photos.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return gridItem(index);
+                              },
+                              crossAxisCount: 2,
+                            ),
+                            if (photos.isNotEmpty)
                               Gap(height: AppDimens.appVPadding20),
-                            if (categories.isNotEmpty) // show only when list has some data else hide
+                            if (photos
+                                .isNotEmpty) // show only when list has some data else hide
                               Container(
                                 margin: const EdgeInsets.symmetric(
-                                    horizontal: AppDimens.appHPadding10, vertical: 0),
+                                    horizontal: AppDimens.appHPadding10,
+                                    vertical: 0),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     CommonIconButton(
                                       icon: Icons.arrow_back_ios_new_rounded,
                                       onPressed: () {
                                         _cubit.previousPage();
-                                        _scrollController.jumpTo(0.0);
                                       },
                                       tooltip: 'Previous',
                                     ),
@@ -195,7 +192,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       icon: Icons.arrow_forward_ios_rounded,
                                       onPressed: () {
                                         _cubit.nextPage();
-                                        _scrollController.jumpTo(0.0);
                                       },
                                       tooltip: 'Next',
                                     ),
@@ -208,7 +204,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       return Container();
                     },
                   ),
-
                 ],
               ),
             ),
@@ -293,6 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget gridItem(int index) {
+    Size _size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -311,18 +307,22 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         child: CachedNetworkImage(
-          imageUrl: photos[index].src?.portrait ?? '',
+          imageUrl: photos[index].src?.original ?? '',
           progressIndicatorBuilder: (
             context,
             url,
             progress,
           ) {
             return Center(
-              child: CircularProgressIndicator(
-                color: Colors.orange,
-                value: progress.progress != null
-                    ? progress.totalSize! / progress.downloaded
-                    : null,
+              // child: CircularProgressIndicator(
+              //   color: Colors.orange,
+              //   value: progress.progress != null
+              //       ? progress.totalSize! / progress.downloaded
+              //       : null,
+              // )
+              child: squareShimmer(
+                height: _size.height * 0.32,
+                width: double.infinity,
               ),
             );
           },

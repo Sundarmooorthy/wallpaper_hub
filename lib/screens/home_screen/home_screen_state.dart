@@ -16,9 +16,8 @@ final class ErrorHomeScreenView extends HomeScreenState {
   ErrorHomeScreenView(this.msg);
 }
 
-final class ReceivedHomeScreenView extends HomeScreenState {
+  final class ReceivedHomeScreenView extends HomeScreenState {
   final ImageModel imageData;
-
   ReceivedHomeScreenView(this.imageData);
 }
 
