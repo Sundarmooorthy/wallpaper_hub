@@ -21,12 +21,12 @@ class SearchRepository {
       ),
     );
     _searchApiService =
-        SearchApiService(_dio, baseUrl: ApiConstant.baseUrl);
+        SearchApiService(_dio, baseUrl: ConfigManager.instance.getBaseUrl());
   }
 
   Future<ImageModel> getSearchedWallpapers(String query) async {
     return _searchApiService.getSearchedWallpapers(
-      ApiConstant.pexelAPIKey,
+      ConfigManager.instance.getPexelApiKey(),
       query,
       perPage,
     );

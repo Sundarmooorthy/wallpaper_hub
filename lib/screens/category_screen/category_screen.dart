@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:wallpaper_hub/my_app_exports.dart';
 import 'package:wallpaper_hub/screens/category_screen/category_screen_cubit.dart';
 import '../image_full_screen/image_full_screen_cubit.dart';
@@ -122,32 +123,33 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       return Center(child: Text(state.msg));
                     }
                     if (state is ReceivedCategoryView) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        // mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GridView.builder(
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppDimens.appHPadding10,
+                          vertical: AppDimens.appVPadding10,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          // mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MasonryGridView.count(
+                              crossAxisSpacing: AppDimens.appHPadding10,
+                              mainAxisSpacing: AppDimens.appVPadding10,
                               padding: const EdgeInsets.only(
                                 bottom: AppDimens.appVPadding20,
-                                top: AppDimens.appVPadding20,
-                                left: AppDimens.appHPadding10,
-                                right: AppDimens.appHPadding10,
+                                top: 0,
                               ),
                               shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 4 / 6.5,
-                                crossAxisSpacing: AppDimens.appHPadding10,
-                                mainAxisSpacing: AppDimens.appHPadding10,
-                              ),
+                              physics: const BouncingScrollPhysics(),
                               itemCount: photos.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return gridItem(index);
-                              }),
-                        ],
+                              },
+                              crossAxisCount: 2,
+                            ),
+                          ],
+                        ),
                       );
                     }
                     return Container();

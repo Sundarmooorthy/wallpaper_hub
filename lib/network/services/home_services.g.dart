@@ -25,6 +25,8 @@ class _HomeApiService implements HomeApiService {
 
   @override
   Future<ImageModel> getCuratedWallpapers(
+    String contentType,
+    String authorization,
     int page,
     int perPage,
   ) async {
@@ -34,9 +36,8 @@ class _HomeApiService implements HomeApiService {
       r'per_page': perPage,
     };
     final _headers = <String, dynamic>{
-      r'Content-Type': 'application/json',
-      r'Authorization':
-          'XQ2qmJFwzTA3NSjmQuD25tz7Ba6tYFTvKUkWVLTZFB3gpweopNiSsxYE',
+      r'Content-Type': contentType,
+      r'Authorization': authorization,
     };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
@@ -44,7 +45,7 @@ class _HomeApiService implements HomeApiService {
       method: 'GET',
       headers: _headers,
       extra: _extra,
-      contentType: 'application/json',
+      contentType: contentType,
     )
         .compose(
           _dio.options,

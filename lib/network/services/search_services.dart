@@ -6,7 +6,7 @@ import '../../my_app_exports.dart';
 
 part 'search_services.g.dart';
 
-@RestApi(baseUrl: ApiConstant.baseUrl)
+@RestApi(baseUrl: '')
 abstract class SearchApiService {
   factory SearchApiService(Dio dio, {String baseUrl}) = _SearchApiService;
 

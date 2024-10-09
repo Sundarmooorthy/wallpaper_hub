@@ -18,11 +18,13 @@ class HomeRepository {
         compact: false,
       ),
     );
-    homeApiService = HomeApiService(_dio, baseUrl: ApiConstant.baseUrl);
+    homeApiService = HomeApiService(_dio, baseUrl: ConfigManager.instance.getBaseUrl());
   }
 
   Future<ImageModel> fetchCuratedWallpapers(int page, int perPage) async {
     return homeApiService.getCuratedWallpapers(
+      'application/json',
+      ConfigManager.instance.getPexelApiKey(),
       page,
       perPage,
     );

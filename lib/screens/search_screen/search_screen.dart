@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:wallpaper_hub/my_app_exports.dart';
 import 'package:wallpaper_hub/screens/search_screen/search_screen_cubit.dart';
 
@@ -104,28 +105,21 @@ class _SearchScreenState extends State<SearchScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 // mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  GridView.builder(
-                                      padding: const EdgeInsets.only(
-                                        bottom: AppDimens.appVPadding20,
-                                        top: 0,
-                                      ),
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        childAspectRatio: 4 / 6.5,
-                                        crossAxisSpacing:
-                                            AppDimens.appHPadding10,
-                                        mainAxisSpacing:
-                                            AppDimens.appHPadding10,
-                                      ),
-                                      itemCount: photos.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return gridItem(index);
-                                      }),
+                              MasonryGridView.count(
+                              crossAxisSpacing: AppDimens.appHPadding10,
+                                mainAxisSpacing: AppDimens.appVPadding10,
+                                padding: const EdgeInsets.only(
+                                  bottom: AppDimens.appVPadding20,
+                                  top: 0,
+                                ),
+                                shrinkWrap: true,
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: photos.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return gridItem(index);
+                                },
+                                crossAxisCount: 2,
+                              ),
                                 ],
                               );
                             }
