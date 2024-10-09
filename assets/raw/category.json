@@ -1,0 +1,42 @@
+[
+  {
+    "categoryName": "Nature",
+    "imgUrl": "https://t4.ftcdn.net/jpg/07/08/58/75/240_F_708587567_B5rmKO7uMoxC9ofgMZYmlNwSgi6m6wlA.jpg"
+  },
+  {
+    "categoryName": "Architecture",
+    "imgUrl": "https://as1.ftcdn.net/v2/jpg/00/95/47/00/1000_F_95470006_aGAErWd4YnDkNnCtgP7XgSwVJtinLlFl.jpg"
+  },
+  {
+    "categoryName": "Animals",
+    "imgUrl": "https://as2.ftcdn.net/v2/jpg/05/06/97/33/1000_F_506973329_NCSJOKETJUZjIW8udBA5LWfZ9vep4kV1.jpg"
+  },
+  {
+    "categoryName": "Abstract",
+    "imgUrl": "https://as1.ftcdn.net/v2/jpg/02/22/96/00/1000_F_222960005_bVo8WMI5rRTYi4wABTszEnM5YXcAzHZQ.jpg"
+  },
+  {
+    "categoryName": "Space",
+    "imgUrl": "https://as2.ftcdn.net/v2/jpg/04/81/19/95/1000_F_481199500_2aFq9E8phorjYeP4ASzj6W70FcSI2zNc.jpg"
+  },
+  {
+    "categoryName": "Cityscapes",
+    "imgUrl": "https://as1.ftcdn.net/v2/jpg/05/53/56/18/1000_F_553561868_IGnVWIDLjY6CUwVrrj40DT5BEwbkdM9R.jpg"
+  },
+  {
+    "categoryName": "Cars",
+    "imgUrl": "https://as2.ftcdn.net/v2/jpg/00/89/72/73/1000_F_89727380_TccL6gS3QV1bu2dxm7u5lIU6BNMX29sM.jpg"
+  },
+  {
+    "categoryName": "Flowers",
+    "imgUrl": "https://as1.ftcdn.net/v2/jpg/05/51/80/08/1000_F_551800891_voykcifXbwszN71YNUvmIeZx9KonDC24.jpg"
+  },
+  {
+    "categoryName": "Waterfalls",
+    "imgUrl": "https://as2.ftcdn.net/v2/jpg/02/22/39/05/1000_F_222390576_CSRum9qUjzMIaOoZlPPKqHxZCgFTi9Ol.jpg"
+  },
+  {
+    "categoryName": "Mountains",
+    "imgUrl": "https://as2.ftcdn.net/v2/jpg/03/18/39/29/1000_F_318392932_tH79kGuBMIzHgcwvO3iFEdXWVLuOeYnN.jpg"
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "441861090815",
+    "firebase_url": "https://wallpaper-zone-4e42e-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "wallpaper-zone-4e42e",
+    "storage_bucket": "wallpaper-zone-4e42e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441861090815:android:35286a397b4030e0108bca",
+        "android_client_info": {
+          "package_name": "com.example.wallpaper_hub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvZfMzbt5ur8DakJiD94fr9ZYsBx41j08"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
