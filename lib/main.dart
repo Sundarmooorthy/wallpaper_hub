@@ -26,17 +26,18 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(create: (context) => SearchRepository()),
       ],
       child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'WallPaper Zone',
-          theme: ThemeData(
-            primaryColor: Colors.white,
+        debugShowCheckedModeBanner: false,
+        title: 'WallPaper Zone',
+        theme: ThemeData(
+          primaryColor: Colors.white,
+        ),
+        home: BlocProvider(
+          create: (context) => HomeScreenCubit(
+            HomeRepository(),
           ),
-          home: BlocProvider(
-            create: (context) => HomeScreenCubit(
-              HomeRepository(),
-            ),
-            child: const HomeScreen(),
-          )),
+          child: const HomeScreen(),
+        ),
+      ),
     );
   }
 }
