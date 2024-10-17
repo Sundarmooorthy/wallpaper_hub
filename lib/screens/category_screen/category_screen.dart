@@ -180,7 +180,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               create: (context) => ImageFullScreenCubit(),
               child: ImageFullScreen(
                 photos: photos,
-                imageUrl: photos[index].src?.large2x ?? '',
+                imageUrl: photos[index].src?.original ?? '',
               ),
             ),
           ),
@@ -189,19 +189,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         child: CachedNetworkImage(
-          imageUrl: photos[index].src?.original ?? '',
+          imageUrl: photos[index].src?.medium ?? '',
           progressIndicatorBuilder: (
             context,
             url,
             progress,
           ) {
             return Center(
-              // child: CircularProgressIndicator(
-              //   color: Colors.orange,
-              //   value: progress.progress != null
-              //       ? progress.totalSize! / progress.downloaded
-              //       : null,
-              // )
+              /*child: CircularProgressIndicator(
+              color: Colors.orange,
+              value: progress.progress != null
+                  ? progress.totalSize! / progress.downloaded
+                  : null,
+            )*/
               child: squareShimmer(
                 height: _size.height * 0.32,
                 width: double.infinity,

@@ -59,8 +59,8 @@ class AppTextStyle {
   static TextStyle semiBold18({String? fontFamily, Color? color}) =>
       semiBold(18, fontFamily: fontFamily, color: color);
 
-  static TextStyle semiBold20({String? fontFamily, Color? color}) =>
-      semiBold(20, fontFamily: fontFamily, color: color);
+  static TextStyle semiBold20({String? fontFamily, Color? color,double? size=20,}) =>
+      semiBold(size!, fontFamily: fontFamily, color: color);
 
   static TextStyle splashSize({String? fontFamily, Color? color}) =>
       semiBold(38, fontFamily: fontFamily, color: color);

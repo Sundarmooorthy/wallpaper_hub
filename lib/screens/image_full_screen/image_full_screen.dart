@@ -7,9 +7,14 @@ import 'package:widget_zoom/widget_zoom.dart';
 class ImageFullScreen extends StatefulWidget {
   final List<Photos> photos;
   final String imageUrl;
+  final String? imageName;
 
-  const ImageFullScreen(
-      {super.key, required this.photos, required this.imageUrl});
+  const ImageFullScreen({
+    super.key,
+    required this.photos,
+    required this.imageUrl,
+    this.imageName,
+  });
 
   @override
   State<ImageFullScreen> createState() => _ImageFullScreenState();
@@ -18,6 +23,7 @@ class ImageFullScreen extends StatefulWidget {
 class _ImageFullScreenState extends State<ImageFullScreen> {
   late ImageFullScreenCubit _cubit;
   bool isDownloadingDone = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -43,34 +49,37 @@ class _ImageFullScreenState extends State<ImageFullScreen> {
             child: const Icon(Icons.arrow_back_ios_new_rounded)),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: WidgetZoom(
-                heroAnimationTag: 'tag',
-                zoomWidget: Image.network(
-                  widget.imageUrl,
-                  fit: BoxFit.fitHeight,
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.orange,
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null,
-                      ),
-                    );
-                  },
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: WidgetZoom(
+                  heroAnimationTag: 'tag',
+                  zoomWidget: Image.network(
+                    widget.imageUrl,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.orange,
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null,
+                        ),
+                      );
+                    },
+                  ),
+                  closeFullScreenImageOnDispose: true,
                 ),
-                closeFullScreenImageOnDispose: true,
               ),
-            ),
-            Gap(height: AppDimens.appVPadding20),
-          ],
+              Gap(height: AppDimens.appVPadding20),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Padding(
@@ -81,16 +90,32 @@ class _ImageFullScreenState extends State<ImageFullScreen> {
         child: BlocConsumer<ImageFullScreenCubit, ImageFullScreenState>(
           bloc: _cubit,
           listener: (context, state) {
+            if (state is ImageDownloading) {
+              isLoading = true;
+            }
             if (state is ImageDownloadSuccess) {
+              isLoading = false;
               isDownloadingDone = true;
+              _cubit.playSound();
               setState(() {});
-            } else {
-              isDownloadingDone = false;
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+                content: Text(state.imagePath),
+              ));
+            }
+            if (state is ImageDownloadFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+                content: Text(state.error),
+              ));
             }
           },
           builder: (context, state) {
             return CommonElevatedButton(
               height: size.height * 0.055,
+              isLoading: isLoading,
               bgColor: isDownloadingDone ? Colors.green : Colors.orange,
               text: isDownloadingDone ? 'Downloaded' : 'Download',
               icon: Icon(
@@ -98,9 +123,14 @@ class _ImageFullScreenState extends State<ImageFullScreen> {
                 color: Colors.white,
               ),
               textStyle: AppTextStyle.semiBold16(color: Colors.white),
-              onPressed: () {
-                _cubit.saveImageLocally(widget.imageUrl);
-              },
+              onPressed: isDownloadingDone
+                  ? () {}
+                  : () {
+                      _cubit.saveImageLocally(
+                        widget.imageUrl,
+                        widget.imageName ?? 'N/A',
+                      );
+                    },
             );
           },
         ),

@@ -44,9 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
     Size _size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
-        title: brandName(),
+        title: brandName(fontSize: 20),
         elevation: 0.0,
         toolbarHeight: kToolbarHeight,
       ),
@@ -76,8 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   searchField(
                     hintText: 'Search...',
@@ -131,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               crossAxisSpacing: AppDimens.appHPadding10,
                               mainAxisSpacing: AppDimens.appHPadding10,
                             ),
-                            itemCount: 20,
+                            itemCount: 10,
                             itemBuilder: (BuildContext context, int index) {
                               return squareShimmer();
                             });
@@ -150,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (state is ReceivedHomeScreenView) {
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             MasonryGridView.count(
@@ -298,7 +299,8 @@ class _HomeScreenState extends State<HomeScreen> {
               create: (context) => ImageFullScreenCubit(),
               child: ImageFullScreen(
                 photos: photos,
-                imageUrl: photos[index].src?.large2x ?? '',
+                imageUrl: photos[index].src?.original ?? '',
+                imageName: photos[index].alt ?? '',
               ),
             ),
           ),
@@ -307,19 +309,19 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         child: CachedNetworkImage(
-          imageUrl: photos[index].src?.original ?? '',
+          imageUrl: photos[index].src?.medium ?? '',
           progressIndicatorBuilder: (
             context,
             url,
             progress,
           ) {
             return Center(
-              // child: CircularProgressIndicator(
-              //   color: Colors.orange,
-              //   value: progress.progress != null
-              //       ? progress.totalSize! / progress.downloaded
-              //       : null,
-              // )
+              /*child: CircularProgressIndicator(
+                color: Colors.orange,
+                value: progress.progress != null
+                    ? progress.totalSize! / progress.downloaded
+                    : null,
+              ),*/
               child: squareShimmer(
                 height: _size.height * 0.32,
                 width: double.infinity,

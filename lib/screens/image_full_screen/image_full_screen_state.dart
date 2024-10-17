@@ -18,3 +18,9 @@ class ImageDownloadFailure extends ImageFullScreenState {
 
   ImageDownloadFailure(this.error);
 }
+
+class ImageDownloadError extends ImageFullScreenState {
+  final String msg;
+
+  ImageDownloadError(this.msg);
+}

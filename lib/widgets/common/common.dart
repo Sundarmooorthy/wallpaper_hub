@@ -3,23 +3,21 @@ import 'package:shimmer/shimmer.dart';
 import 'package:wallpaper_hub/my_app_exports.dart';
 
 // app bar text widget
-Widget brandName() {
+Widget brandName({double? fontSize = 10}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
       Text(
         'WallPaper',
-        style: AppTextStyle.semiBold20(),
+        style: AppTextStyle.semiBold20(size: fontSize),
       ),
       const SizedBox(
         width: 5,
       ),
       Text(
         'Zone',
-        style: AppTextStyle.semiBold20(
-          color: Colors.orange,
-        ),
+        style: AppTextStyle.semiBold20(color: Colors.orange, size: fontSize),
       ),
     ],
   );
@@ -35,6 +33,7 @@ Widget searchField({
   void Function()? searchTap,
   TextInputAction? textInputAction,
   void Function(String)? onSubmitted,
+  Widget? suffixIcon = const Icon(Icons.search),
 }) {
   return TextField(
     controller: controller,
@@ -53,7 +52,7 @@ Widget searchField({
       hintStyle: AppTextStyle.normal14(color: Colors.grey),
       suffixIcon: GestureDetector(
         onTap: searchTap,
-        child: const Icon(Icons.search),
+        child: suffixIcon,
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30),

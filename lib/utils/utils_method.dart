@@ -35,6 +35,31 @@ class UtilsMethod {
       fontSize: 16.0,
     );
   }
+
+
+  final RegExp emailRegex = RegExp(
+    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+  );
+
+  String? emailValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email cannot be empty';
+    }
+
+    // Regular expression for validating an email
+    final RegExp emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+
+    if (!emailRegex.hasMatch(value)) {
+      return 'Please enter a valid email address';
+    }
+
+    return null; // Return null if validation is successful
+  }
 }
 
 enum ToastType { success, error, warning, info }
+
+
+

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:wallpaper_hub/firebase_options.dart';
 import 'package:wallpaper_hub/my_app_exports.dart';
 import 'package:wallpaper_hub/repository/repository.dart';
@@ -30,12 +31,11 @@ class MyApp extends StatelessWidget {
         title: 'WallPaper Zone',
         theme: ThemeData(
           primaryColor: Colors.white,
+          fontFamily: GoogleFonts.playfairDisplay().fontFamily,
         ),
         home: BlocProvider(
-          create: (context) => HomeScreenCubit(
-            HomeRepository(),
-          ),
-          child: const HomeScreen(),
+          create: (context) => SignInScreenCubit(),
+          child: SignInScreen(),
         ),
       ),
     );

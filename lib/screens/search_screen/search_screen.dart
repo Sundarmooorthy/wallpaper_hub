@@ -54,7 +54,7 @@ class _SearchScreenState extends State<SearchScreen> {
               physics: const BouncingScrollPhysics(),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   searchField(
@@ -105,21 +105,22 @@ class _SearchScreenState extends State<SearchScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 // mainAxisSize: MainAxisSize.min,
                                 children: [
-                              MasonryGridView.count(
-                              crossAxisSpacing: AppDimens.appHPadding10,
-                                mainAxisSpacing: AppDimens.appVPadding10,
-                                padding: const EdgeInsets.only(
-                                  bottom: AppDimens.appVPadding20,
-                                  top: 0,
-                                ),
-                                shrinkWrap: true,
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: photos.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return gridItem(index);
-                                },
-                                crossAxisCount: 2,
-                              ),
+                                  MasonryGridView.count(
+                                    crossAxisSpacing: AppDimens.appHPadding10,
+                                    mainAxisSpacing: AppDimens.appVPadding10,
+                                    padding: const EdgeInsets.only(
+                                      bottom: AppDimens.appVPadding20,
+                                      top: 0,
+                                    ),
+                                    shrinkWrap: true,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: photos.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return gridItem(index);
+                                    },
+                                    crossAxisCount: 2,
+                                  ),
                                 ],
                               );
                             }
@@ -146,7 +147,7 @@ class _SearchScreenState extends State<SearchScreen> {
               create: (context) => ImageFullScreenCubit(),
               child: ImageFullScreen(
                 photos: photos,
-                imageUrl: photos[index].src?.large2x ?? '',
+                imageUrl: photos[index].src?.original ?? '',
               ),
             ),
           ),
@@ -155,19 +156,19 @@ class _SearchScreenState extends State<SearchScreen> {
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         child: CachedNetworkImage(
-          imageUrl: photos[index].src?.original ?? '',
+          imageUrl: photos[index].src?.medium ?? '',
           progressIndicatorBuilder: (
             context,
             url,
             progress,
           ) {
             return Center(
-              // child: CircularProgressIndicator(
-              //   color: Colors.orange,
-              //   value: progress.progress != null
-              //       ? progress.totalSize! / progress.downloaded
-              //       : null,
-              // )
+              /*child: CircularProgressIndicator(
+              color: Colors.orange,
+              value: progress.progress != null
+                  ? progress.totalSize! / progress.downloaded
+                  : null,
+            )*/
               child: squareShimmer(
                 height: _size.height * 0.32,
                 width: double.infinity,

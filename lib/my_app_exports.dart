@@ -5,3 +5,4 @@ export 'main.dart';
 export 'model/api/api.dart';
 export 'network/network.dart';
 export 'remote_config/remote_config.dart';
+export 'local_data_base/local_data_base.dart ';
