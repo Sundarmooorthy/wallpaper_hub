@@ -16,11 +16,15 @@ class SignInScreenCubit extends Cubit<SignInScreenState> {
     emit(SignInLoading());
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
+      Future.delayed(
+        Duration(milliseconds: 500),
+        () async {
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+        },
       );
-
       emit(SignInSuccess("Logged In Successfully!"));
       Future.delayed(
         Duration(milliseconds: 500),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallpaper_hub/my_app_exports.dart';
+import 'package:wallpaper_hub/screens/auth/forgot_password/forgot_password_cubit.dart';
 
 class SignInScreen extends StatefulWidget {
   SignInScreen({super.key});
@@ -15,6 +16,8 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool isLoading = false;
+  bool isOnBoardingDone = false;
+  bool isLoggedIn = false;
 
   @override
   void initState() {
@@ -26,6 +29,7 @@ class _SignInScreenState extends State<SignInScreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _cubit.close();
     super.dispose();
   }
 
@@ -33,6 +37,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
       body: BlocListener<SignInScreenCubit, SignInScreenState>(
         listener: (context, state) {
           if (state is SignInLoading) {
@@ -51,13 +56,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   children: [
                     SizedBox(height: constraints.maxHeight * 0.18),
                     brandName(fontSize: 38),
-                    // Image.network(
-                    //   "https://i.postimg.cc/nz0YBQcH/Logo-light.png",
-                    //   height: 100,
-                    // ),
                     SizedBox(height: constraints.maxHeight * 0.1),
                     Text(
-                      "Sign In",
+                      AppStrings.signIn,
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall!
@@ -77,7 +78,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               }
                               return '';
                             },
-                            hintText: 'Email',
+                            hintText: AppStrings.email,
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -90,25 +91,41 @@ class _SignInScreenState extends State<SignInScreen> {
                                 }
                                 return '';
                               },
-                              hintText: 'Password',
+                              hintText: AppStrings.password,
                             ),
                           ),
                           CommonElevatedButton(
+                            isLoading: isLoading,
                             onPressed: () async {
                               await _cubit.signIn(
                                 _emailController.text,
                                 _passwordController.text,
                                 context,
                               );
+                              setState(() {
+                                isLoggedIn = true;
+                              });
+                              await AppStorage.setLoggedIn(isLoggedIn);
+                              debugPrint('is Login Done ? <<<<<< $isLoggedIn');
                             },
                             width: double.infinity,
-                            text: 'Sign In',
+                            text: AppStrings.signIn,
                           ),
                           const SizedBox(height: 16.0),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BlocProvider(
+                                      create: (context) =>
+                                          ForgotPasswordCubit(),
+                                      child: ForgotPassword(),
+                                    ),
+                                  ));
+                            },
                             child: Text(
-                              'Forgot Password?',
+                              AppStrings.forgotPassword,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
@@ -135,10 +152,10 @@ class _SignInScreenState extends State<SignInScreen> {
                             },
                             child: Text.rich(
                               const TextSpan(
-                                text: "Don’t have an account? ",
+                                text: AppStrings.dontHaveAccount,
                                 children: [
                                   TextSpan(
-                                    text: "Sign Up",
+                                    text: AppStrings.signIn,
                                     style: TextStyle(color: Colors.orange),
                                   ),
                                 ],

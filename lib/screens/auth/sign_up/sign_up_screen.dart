@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallpaper_hub/my_app_exports.dart';
-import 'package:wallpaper_hub/screens/auth/sign_up/sign_up_screen_cubit.dart';
 import 'package:wallpaper_hub/utils/utils_method.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -32,6 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _cubit.close();
     super.dispose();
   }
 
@@ -65,7 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   // ),
                   SizedBox(height: constraints.maxHeight * 0.08),
                   Text(
-                    "Sign Up",
+                    AppStrings.signUp,
                     style: Theme.of(context)
                         .textTheme
                         .headlineSmall!
@@ -77,7 +77,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: Column(
                       children: [
                         CustomTextField(
-                          hintText: "Full Name",
+                          hintText: AppStrings.name,
                           controller: _nameController,
                           validator: (v) {
                             if (v!.isEmpty) {
@@ -88,7 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         const SizedBox(height: 16.0),
                         CustomTextField(
-                          hintText: "Email",
+                          hintText: AppStrings.email,
                           controller: _emailController,
                           validator: (v) {
                             return UtilsMethod().emailValidator(v);
@@ -98,7 +98,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                           child: CustomTextField(
-                            hintText: "Password",
+                            hintText: AppStrings.password,
                             controller: _passwordController,
                             validator: (v) {
                               if (v!.isEmpty) {
@@ -135,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: CommonElevatedButton(
                             isLoading: isLoading,
                             width: double.infinity,
-                            text: "Sign Up",
+                            text: AppStrings.signUp,
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                               } else {
@@ -163,10 +163,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           },
                           child: Text.rich(
                             const TextSpan(
-                              text: "Already have an account? ",
+                              text: AppStrings.alreadyHaveAccount,
                               children: [
                                 TextSpan(
-                                  text: "Sign in",
+                                  text: AppStrings.signIn,
                                   style: TextStyle(color: Colors.orange),
                                 ),
                               ],
