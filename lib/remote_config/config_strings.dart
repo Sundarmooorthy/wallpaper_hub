@@ -7,4 +7,5 @@ class ConfigStrings {
   static const String KEY_CATEGORY_DATA = "category_data";
   static const String KEY_UNDER_MAINTENANCE = "under_maintenance";
   static const String KEY_MY_NAME = "my_name";
+  static const String KEY_IS_UNDER_MAINTENANCE = "isMaintenance";
 }

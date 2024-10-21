@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:wallpaper_hub/my_app_exports.dart';
 
 class UtilsMethod {
   showToast(String msg, ToastType type) {
@@ -36,7 +37,6 @@ class UtilsMethod {
     );
   }
 
-
   final RegExp emailRegex = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
   );
@@ -46,7 +46,6 @@ class UtilsMethod {
       return 'Email cannot be empty';
     }
 
-    // Regular expression for validating an email
     final RegExp emailRegex = RegExp(
       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
     );
@@ -54,12 +53,40 @@ class UtilsMethod {
     if (!emailRegex.hasMatch(value)) {
       return 'Please enter a valid email address';
     }
+    return null;
+  }
 
-    return null; // Return null if validation is successful
+  Future<bool?> showConfirmationDialog({
+    required BuildContext context,
+    required String title,
+    String content = '',
+    String confirmText = 'Yes',
+    String cancelText = 'No',
+    Function()? onTapCancel,
+    Function()? onTapConfirm,
+  }) {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            TextButton(
+              onPressed: onTapCancel,
+              child: Text(cancelText),
+            ),
+            CommonElevatedButton(
+              onPressed: onTapConfirm,
+              text: confirmText,
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
 enum ToastType { success, error, warning, info }
-
-
-

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallpaper_hub/my_app_exports.dart';
 import 'package:wallpaper_hub/screens/auth/forgot_password/forgot_password_cubit.dart';
-import 'package:wallpaper_hub/utils/utils_method.dart';
 
 class ForgotPassword extends StatefulWidget {
   ForgotPassword({super.key});

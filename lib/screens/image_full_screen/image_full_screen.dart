@@ -4,16 +4,20 @@ import 'package:wallpaper_hub/my_app_exports.dart';
 import 'package:wallpaper_hub/screens/image_full_screen/image_full_screen_cubit.dart';
 import 'package:widget_zoom/widget_zoom.dart';
 
-class ImageFullScreen extends StatefulWidget {
-  final List<Photos> photos;
+class ImageFullScreenArgs {
+  final List<Photos>? photos;
   final String imageUrl;
-  final String? imageName;
+  final String imageName;
+
+  ImageFullScreenArgs(this.photos, this.imageUrl, this.imageName);
+}
+
+class ImageFullScreen extends StatefulWidget {
+  final ImageFullScreenArgs? args;
 
   const ImageFullScreen({
     super.key,
-    required this.photos,
-    required this.imageUrl,
-    this.imageName,
+    this.args,
   });
 
   @override
@@ -58,7 +62,7 @@ class _ImageFullScreenState extends State<ImageFullScreen> {
                 child: WidgetZoom(
                   heroAnimationTag: 'tag',
                   zoomWidget: Image.network(
-                    widget.imageUrl,
+                    widget.args?.imageUrl ?? '',
                     fit: BoxFit.cover,
                     loadingBuilder: (BuildContext context, Widget child,
                         ImageChunkEvent? loadingProgress) {
@@ -127,8 +131,8 @@ class _ImageFullScreenState extends State<ImageFullScreen> {
                   ? () {}
                   : () {
                       _cubit.saveImageLocally(
-                        widget.imageUrl,
-                        widget.imageName ?? 'N/A',
+                        widget.args!.imageUrl,
+                        widget.args?.imageName ?? 'N/A',
                       );
                     },
             );

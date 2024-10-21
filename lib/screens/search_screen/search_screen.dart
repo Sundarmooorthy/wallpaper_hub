@@ -140,16 +140,13 @@ class _SearchScreenState extends State<SearchScreen> {
     Size _size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        navigateTo(
           context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => ImageFullScreenCubit(),
-              child: ImageFullScreen(
-                photos: photos,
-                imageUrl: photos[index].src?.original ?? '',
-              ),
-            ),
+          AppRoute.imageFullScreen,
+          args: ImageFullScreenArgs(
+            photos,
+            photos[index].src?.original ?? '',
+            'N/A',
           ),
         );
       },

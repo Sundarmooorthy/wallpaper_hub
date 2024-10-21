@@ -59,10 +59,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 children: [
                   SizedBox(height: constraints.maxHeight * 0.18),
                   brandName(fontSize: 38),
-                  // Image.network(
-                  //   "https://i.postimg.cc/nz0YBQcH/Logo-light.png",
-                  //   height: 100,
-                  // ),
                   SizedBox(height: constraints.maxHeight * 0.08),
                   Text(
                     AppStrings.signUp,
@@ -108,28 +104,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             },
                           ),
                         ),
-                        /* DropdownButtonFormField(
-                        items: countries,
-                        icon: const Icon(Icons.expand_more),
-                        onSaved: (country) {
-                          // save it
-                        },
-                        onChanged: (value) {},
-                        decoration: InputDecoration(
-                          hintText: 'Country',
-                          hintStyle: AppTextStyle.normal16(
-                            color: Colors.grey.shade600,
-                          ),
-                          filled: true,
-                          fillColor: Color(0xFFF5FCF9),
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16.0 * 1.5, vertical: 16.0),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.all(Radius.circular(50)),
-                          ),
-                        ),
-                      ),*/
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                           child: CommonElevatedButton(
@@ -151,15 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BlocProvider(
-                                  create: (context) => SignInScreenCubit(),
-                                  child: SignInScreen(),
-                                ),
-                              ),
-                            );
+                            navigateTo(context, AppRoute.signInScreen);
                           },
                           child: Text.rich(
                             const TextSpan(
@@ -195,21 +161,3 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
-
-// only for demo
-List<DropdownMenuItem<String>>? countries = [
-  "Bangladesh",
-  "India",
-  "Pakistan",
-  "America",
-  "UAE",
-  "Europe",
-  "Switzerland",
-  'Canada',
-  'Japan',
-  'Germany',
-  'Australia',
-  'Sweden',
-].map<DropdownMenuItem<String>>((String value) {
-  return DropdownMenuItem<String>(value: value, child: Text(value));
-}).toList();

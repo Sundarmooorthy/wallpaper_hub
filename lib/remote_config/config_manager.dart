@@ -44,6 +44,10 @@ class ConfigManager {
     return data;
   }
 
+  bool getMaintenanceStatus() {
+    return remoteConfig.getBool(ConfigStrings.KEY_IS_UNDER_MAINTENANCE);
+  }
+
   /// get bool
 
 // bool getAddProductCategorySvg() {

@@ -2,6 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wallpaper_hub/my_app_exports.dart';
 
+Future navigateTo(BuildContext context, String destination, {Object? args}) {
+  return Navigator.pushNamed(context, destination, arguments: args);
+}
+
+Future<R?> navigateToWithReturnData<R>(BuildContext context, String destination,
+    {Object? args}) {
+  return Navigator.pushNamed<R>(context, destination, arguments: args);
+}
+
+Future replaceWith(BuildContext context, String destination, {dynamic args}) {
+  return Navigator.pushReplacementNamed(context, destination, arguments: args);
+}
+
 // app bar text widget
 Widget brandName({double? fontSize = 10}) {
   return Row(
@@ -136,11 +149,4 @@ Widget buildShimmerGrid({int itemCount = 10, Widget? child}) {
       itemBuilder: (BuildContext context, int index) {
         return child;
       });
-}
-
-Future<Object?> navigateTo(BuildContext context, String route) {
-  return Navigator.pushNamed(
-    context,
-    route,
-  );
 }
