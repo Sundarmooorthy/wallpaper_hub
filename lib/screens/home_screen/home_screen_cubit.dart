@@ -109,4 +109,18 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       UtilsMethod().showToast('Already in First Page', ToastType.warning);
     }
   }
+
+  void exitAppDialog(BuildContext context) {
+    UtilsMethod().showConfirmationDialog(
+      context: context,
+      title: "Are you sure want to Exit ?",
+      content: '',
+      onTapCancel: () {
+        Navigator.pop(context);
+      },
+      onTapConfirm: () {
+        SystemNavigator.pop();
+      },
+    );
+  }
 }

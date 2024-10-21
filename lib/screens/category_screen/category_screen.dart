@@ -6,12 +6,20 @@ import 'package:wallpaper_hub/my_app_exports.dart';
 import 'package:wallpaper_hub/screens/category_screen/category_screen_cubit.dart';
 import '../image_full_screen/image_full_screen_cubit.dart';
 
-class CategoryScreen extends StatefulWidget {
+class CategoryScreenArgs {
   final String image;
   final String categoryName;
 
-  const CategoryScreen(
-      {super.key, required this.image, required this.categoryName});
+  CategoryScreenArgs(this.image, this.categoryName);
+}
+
+class CategoryScreen extends StatefulWidget {
+  final CategoryScreenArgs args;
+
+  const CategoryScreen({
+    super.key,
+    required this.args,
+  });
 
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
@@ -25,7 +33,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   void initState() {
     _cubit = BlocProvider.of<CategoryScreenCubit>(context);
     super.initState();
-    _cubit.getPhotos(widget.categoryName);
+    _cubit.getPhotos(widget.args.categoryName);
   }
 
   @override
@@ -70,7 +78,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   background: Stack(
                     children: [
                       Image.network(
-                        widget.image,
+                        widget.args.image,
                         fit: BoxFit.cover,
                         width: double.infinity,
                       ),
@@ -86,7 +94,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       ),
                       Center(
                         child: Text(
-                          widget.categoryName,
+                          widget.args.categoryName,
                           overflow: TextOverflow.ellipsis,
                           softWrap: true,
                           style: AppTextStyle.semiBold(
@@ -173,16 +181,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
     Size _size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        navigateTo(
           context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => ImageFullScreenCubit(),
-              child: ImageFullScreen(
-                photos: photos,
-                imageUrl: photos[index].src?.original ?? '',
-              ),
-            ),
+          AppRoute.imageFullScreen,
+          args: ImageFullScreenArgs(
+            photos,
+            photos[index].src?.original ?? '',
+            'N/A',
           ),
         );
       },

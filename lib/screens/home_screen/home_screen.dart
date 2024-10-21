@@ -1,14 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:wallpaper_hub/my_app_exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wallpaper_hub/repository/repository.dart';
 import 'package:wallpaper_hub/screens/category_screen/category_screen_cubit.dart';
 import 'package:wallpaper_hub/screens/home_screen/home_screen_cubit.dart';
 import 'package:wallpaper_hub/screens/image_full_screen/image_full_screen_cubit.dart';
 import 'package:wallpaper_hub/screens/search_screen/search_screen_cubit.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:wallpaper_hub/utils/utils_method.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<CategoryModel> categories = [];
   List<Photos> photos = [];
   ImageModel? imageModel;
+  final User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -31,6 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _cubit.getCategories();
     _cubit.getPhotos();
+    debugPrint(
+        "Maintenance Status ${ConfigManager.instance.getMaintenanceStatus()}");
   }
 
   @override
@@ -42,170 +46,184 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.transparent,
-        title: brandName(fontSize: 20),
-        elevation: 0.0,
-        toolbarHeight: kToolbarHeight,
-      ),
-      body: BlocListener<HomeScreenCubit, HomeScreenState>(
-        listener: (context, state) {
-          if (state is ReceivedHomeScreenView) {
-            imageModel = state.imageData;
-            photos = state.imageData.photos!;
-            debugPrint('images length >>>> ${photos.length}');
-          }
-          if (state is CategoryLoaded) {
-            categories = state.categories;
-            setState(() {});
-          }
-        },
-        child: LiquidPullToRefresh(
-          onRefresh: () => _cubit.getPhotos(),
-          key: _refreshIndicatorKey,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          return;
+        } else {
+          debugPrint('Screen Popped Out Successfully ');
+          _cubit.exitAppDialog(context);
+        }
+      },
+      child: Scaffold(
+        drawer: AppDrawer(),
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
           backgroundColor: Colors.white,
-          color: Colors.orange,
-          child: Container(
-            alignment: Alignment.topCenter,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDimens.appHPadding10,
-              vertical: AppDimens.appVPadding10,
-            ),
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  searchField(
-                    hintText: 'Search...',
-                    readOnly: true,
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BlocProvider(
-                              create: (context) =>
-                                  SearchScreenCubit(SearchRepository()),
-                              child: const SearchScreen(),
-                            ),
-                          ));
-                    },
-                  ),
-                  Gap(height: AppDimens.appVPadding10),
-                  waterMark(),
-                  Gap(height: AppDimens.appVPadding10),
-                  SizedBox(
-                    height: _size.height * 0.06,
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) => SizedBox(
-                        width: _size.width * 0.020,
-                      ),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: categories.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return categoryListItem(index);
+          surfaceTintColor: Colors.transparent,
+          title: brandName(fontSize: 20),
+          elevation: 0.0,
+          toolbarHeight: kToolbarHeight,
+        ),
+        body: BlocListener<HomeScreenCubit, HomeScreenState>(
+          listener: (context, state) {
+            if (state is ReceivedHomeScreenView) {
+              imageModel = state.imageData;
+              photos = state.imageData.photos!;
+              debugPrint('images length >>>> ${photos.length}');
+            }
+            if (state is CategoryLoaded) {
+              categories = state.categories;
+              setState(() {});
+            }
+          },
+          child: LiquidPullToRefresh(
+            onRefresh: () => _cubit.getPhotos(),
+            key: _refreshIndicatorKey,
+            backgroundColor: Colors.white,
+            color: Colors.orange,
+            child: Container(
+              alignment: Alignment.topCenter,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppDimens.appHPadding10,
+                vertical: AppDimens.appVPadding10,
+              ),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    searchField(
+                      hintText: 'Search...',
+                      readOnly: true,
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (context) =>
+                                    SearchScreenCubit(SearchRepository()),
+                                child: const SearchScreen(),
+                              ),
+                            ));
                       },
                     ),
-                  ),
-                  Gap(height: AppDimens.appVPadding20),
-                  BlocConsumer<HomeScreenCubit, HomeScreenState>(
-                    listener: (context, state) {},
-                    builder: (context, state) {
-                      if (state is LoadingHomeView) {
-                        print('>>>>>> Loading state reached');
-                        return GridView.builder(
-                            padding: const EdgeInsets.only(
-                              bottom: AppDimens.appVPadding20,
-                              top: 0,
-                            ),
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 4 / 6.5,
-                              crossAxisSpacing: AppDimens.appHPadding10,
-                              mainAxisSpacing: AppDimens.appHPadding10,
-                            ),
-                            itemCount: 10,
-                            itemBuilder: (BuildContext context, int index) {
-                              return squareShimmer();
-                            });
-                      }
-                      if (state is NoHomeScreenView) {
-                        return Center(
-                          child: Text(
-                            'No Images Currently Available',
-                            style: AppTextStyle.semiBold20(color: Colors.black),
-                          ),
-                        );
-                      }
-                      if (state is ErrorHomeScreenView) {
-                        return Center(child: Text(state.msg));
-                      }
-                      if (state is ReceivedHomeScreenView) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            MasonryGridView.count(
-                              crossAxisSpacing: AppDimens.appHPadding10,
-                              mainAxisSpacing: AppDimens.appVPadding10,
+                    Gap(height: AppDimens.appVPadding10),
+                    waterMark(),
+                    Gap(height: AppDimens.appVPadding10),
+                    SizedBox(
+                      height: _size.height * 0.06,
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) => SizedBox(
+                          width: _size.width * 0.020,
+                        ),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categories.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return categoryListItem(index);
+                        },
+                      ),
+                    ),
+                    Gap(height: AppDimens.appVPadding20),
+                    BlocConsumer<HomeScreenCubit, HomeScreenState>(
+                      listener: (context, state) {},
+                      builder: (context, state) {
+                        if (state is LoadingHomeView) {
+                          print('>>>>>> Loading state reached');
+                          return GridView.builder(
                               padding: const EdgeInsets.only(
                                 bottom: AppDimens.appVPadding20,
                                 top: 0,
                               ),
                               shrinkWrap: true,
-                              physics: const BouncingScrollPhysics(),
-                              itemCount: photos.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return gridItem(index);
-                              },
-                              crossAxisCount: 2,
-                            ),
-                            if (photos.isNotEmpty)
-                              Gap(height: AppDimens.appVPadding20),
-                            if (photos
-                                .isNotEmpty) // show only when list has some data else hide
-                              Container(
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: AppDimens.appHPadding10,
-                                    vertical: 0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CommonIconButton(
-                                      icon: Icons.arrow_back_ios_new_rounded,
-                                      onPressed: () {
-                                        _cubit.previousPage();
-                                      },
-                                      tooltip: 'Previous',
-                                    ),
-                                    CommonIconButton(
-                                      icon: Icons.arrow_forward_ios_rounded,
-                                      onPressed: () {
-                                        _cubit.nextPage();
-                                      },
-                                      tooltip: 'Next',
-                                    ),
-                                  ],
-                                ),
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 4 / 6.5,
+                                crossAxisSpacing: AppDimens.appHPadding10,
+                                mainAxisSpacing: AppDimens.appHPadding10,
                               ),
-                          ],
-                        );
-                      }
-                      return Container();
-                    },
-                  ),
-                ],
+                              itemCount: 10,
+                              itemBuilder: (BuildContext context, int index) {
+                                return squareShimmer();
+                              });
+                        }
+                        if (state is NoHomeScreenView) {
+                          return Center(
+                            child: Text(
+                              'No Images Currently Available',
+                              style:
+                                  AppTextStyle.semiBold20(color: Colors.black),
+                            ),
+                          );
+                        }
+                        if (state is ErrorHomeScreenView) {
+                          return Center(child: Text(state.msg));
+                        }
+                        if (state is ReceivedHomeScreenView) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              MasonryGridView.count(
+                                crossAxisSpacing: AppDimens.appHPadding10,
+                                mainAxisSpacing: AppDimens.appVPadding10,
+                                padding: const EdgeInsets.only(
+                                  bottom: AppDimens.appVPadding20,
+                                  top: 0,
+                                ),
+                                shrinkWrap: true,
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: photos.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return gridItem(index);
+                                },
+                                crossAxisCount: 2,
+                              ),
+                              if (photos.isNotEmpty)
+                                Gap(height: AppDimens.appVPadding20),
+                              if (photos
+                                  .isNotEmpty) // show only when list has some data else hide
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: AppDimens.appHPadding10,
+                                      vertical: 0),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      CommonIconButton(
+                                        icon: Icons.arrow_back_ios_new_rounded,
+                                        onPressed: () {
+                                          _cubit.previousPage();
+                                        },
+                                        tooltip: 'Previous',
+                                      ),
+                                      CommonIconButton(
+                                        icon: Icons.arrow_forward_ios_rounded,
+                                        onPressed: () {
+                                          _cubit.nextPage();
+                                        },
+                                        tooltip: 'Next',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -218,18 +236,12 @@ class _HomeScreenState extends State<HomeScreen> {
     Size _size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        navigateTo(
           context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => CategoryScreenCubit(
-                SearchRepository(),
-              ),
-              child: CategoryScreen(
-                image: categories[index].imgUrl!,
-                categoryName: categories[index].categoryName!,
-              ),
-            ),
+          AppRoute.categoryScreen,
+          args: CategoryScreenArgs(
+            categories[index].imgUrl!,
+            categories[index].categoryName!,
           ),
         );
       },
@@ -292,17 +304,13 @@ class _HomeScreenState extends State<HomeScreen> {
     Size _size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        navigateTo(
           context,
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => ImageFullScreenCubit(),
-              child: ImageFullScreen(
-                photos: photos,
-                imageUrl: photos[index].src?.original ?? '',
-                imageName: photos[index].alt ?? '',
-              ),
-            ),
+          AppRoute.imageFullScreen,
+          args: ImageFullScreenArgs(
+            photos,
+            photos[index].src?.original ?? '',
+            photos[index].alt ?? '',
           ),
         );
       },

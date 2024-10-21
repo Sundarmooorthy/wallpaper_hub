@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallpaper_hub/my_app_exports.dart';
+import 'package:wallpaper_hub/repository/repository.dart';
 import 'package:wallpaper_hub/screens/auth/forgot_password/forgot_password_cubit.dart';
+import '../../home_screen/home_screen_cubit.dart';
 
 class SignInScreen extends StatefulWidget {
   SignInScreen({super.key});
@@ -45,6 +47,7 @@ class _SignInScreenState extends State<SignInScreen> {
           }
           if (state is SignInSuccess) {
             isLoading = false;
+            replaceWith(context, AppRoute.homeScreen);
           }
         },
         child: SafeArea(
@@ -96,17 +99,12 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           CommonElevatedButton(
                             isLoading: isLoading,
-                            onPressed: () async {
-                              await _cubit.signIn(
+                            onPressed: () {
+                              _cubit.signIn(
                                 _emailController.text,
                                 _passwordController.text,
                                 context,
                               );
-                              setState(() {
-                                isLoggedIn = true;
-                              });
-                              await AppStorage.setLoggedIn(isLoggedIn);
-                              debugPrint('is Login Done ? <<<<<< $isLoggedIn');
                             },
                             width: double.infinity,
                             text: AppStrings.signIn,
@@ -114,15 +112,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           const SizedBox(height: 16.0),
                           TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BlocProvider(
-                                      create: (context) =>
-                                          ForgotPasswordCubit(),
-                                      child: ForgotPassword(),
-                                    ),
-                                  ));
+                              navigateTo(
+                                  context, AppRoute.forgotPasswordScreen);
                             },
                             child: Text(
                               AppStrings.forgotPassword,
@@ -140,22 +131,14 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                    create: (context) => SignUpScreenCubit(),
-                                    child: SignUpScreen(),
-                                  ),
-                                ),
-                              );
+                              navigateTo(context, AppRoute.signUpScreen);
                             },
                             child: Text.rich(
                               const TextSpan(
                                 text: AppStrings.dontHaveAccount,
                                 children: [
                                   TextSpan(
-                                    text: AppStrings.signIn,
+                                    text: AppStrings.signUp,
                                     style: TextStyle(color: Colors.orange),
                                   ),
                                 ],
