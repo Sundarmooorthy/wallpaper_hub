@@ -10,3 +10,4 @@ export 'local_data_base/local_data_base.dart';
 export 'repository/repository.dart';
 export 'utils/utils.dart';
 export 'routes/routes.dart';
+export 'notification_service/notification_service.dart';

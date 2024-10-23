@@ -67,6 +67,7 @@ class AppDrawer extends StatelessWidget {
                         await SharedPreferences.getInstance();
                     // clear log in data
                     await userData.remove('isLoggedIn');
+                    await FirebaseAuth.instance.signOut();
                     // for clear all the saved items
                     // await userData.clear();
                     navigateTo(context, AppRoute.signInScreen);

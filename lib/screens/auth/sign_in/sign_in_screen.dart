@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallpaper_hub/my_app_exports.dart';
-import 'package:wallpaper_hub/repository/repository.dart';
-import 'package:wallpaper_hub/screens/auth/forgot_password/forgot_password_cubit.dart';
-import '../../home_screen/home_screen_cubit.dart';
 
 class SignInScreen extends StatefulWidget {
   SignInScreen({super.key});

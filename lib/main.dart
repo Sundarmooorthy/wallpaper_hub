@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,13 +10,34 @@ import 'screens/home_screen/home_screen_cubit.dart';
 import 'screens/on_boarding/on_boarding_dart_cubit.dart';
 import 'routes/routes.dart' as route;
 
+// Top-level function for background messages
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await ConfigManager.setUpRemoteConfig();
+  //initialize appStorage
   await SharedPreferences.getInstance();
+  // Initialize notification service
+  await NotificationService.initialize();
+
+  // Request notification permissions
+  await NotificationService.requestNotificationPermissions();
+
+  // Handle foreground notifications
+  NotificationService.handleForegroundNotifications();
+
+  // Handle background notifications
+  NotificationService.handleBackgroundNotifications();
+
+  // Handle terminated notifications (cold start)
+  await NotificationService.handleTerminatedNotifications();
+
   runApp(MyApp());
 }
 
@@ -58,6 +80,7 @@ class _EntryPointState extends State<EntryPoint> {
   void initState() {
     super.initState();
     _checkViewsStatus();
+    getToken();
   }
 
   Future<void> _checkViewsStatus() async {
@@ -66,6 +89,12 @@ class _EntryPointState extends State<EntryPoint> {
     debugPrint("Is OnBoarding Done ? <<<<<<<$isOnBoardingDone");
     debugPrint("Is LoggedIn Done ? <<<<<<<$isLoggedIn");
     setState(() {});
+  }
+
+  void getToken() {
+    FirebaseMessaging.instance.getToken().then((value) {
+      debugPrint("FIREBASE TOKEN IS :: :: $value");
+    });
   }
 
   @override
