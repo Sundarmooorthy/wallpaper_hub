@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:wallpaper_hub/my_app_exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wallpaper_hub/screens/category_screen/category_screen_cubit.dart';
 import 'package:wallpaper_hub/screens/home_screen/home_screen_cubit.dart';
-import 'package:wallpaper_hub/screens/image_full_screen/image_full_screen_cubit.dart';
 import 'package:wallpaper_hub/screens/search_screen/search_screen_cubit.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:wallpaper_hub/utils/utils_method.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart'; 
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

@@ -10,32 +10,38 @@ import 'screens/home_screen/home_screen_cubit.dart';
 import 'screens/on_boarding/on_boarding_dart_cubit.dart';
 import 'routes/routes.dart' as route;
 
-// Top-level function for background messages
+/// Top-level function for handling background messages
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message: ${message.messageId}");
+  debugPrint("Handling a background message: ${message.messageId}");
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  ///initialize fireBase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  ///initialize remoteConfig
   await ConfigManager.setUpRemoteConfig();
-  //initialize appStorage
+
+  ///initialize appStorage
   await SharedPreferences.getInstance();
-  // Initialize notification service
+
+  /// Initialize notification service
   await NotificationService.initialize();
 
-  // Request notification permissions
+  /// Request notification permissions
   await NotificationService.requestNotificationPermissions();
 
-  // Handle foreground notifications
+  /// Handle foreground notifications
   NotificationService.handleForegroundNotifications();
 
-  // Handle background notifications
+  /// Handle background notifications
   NotificationService.handleBackgroundNotifications();
 
-  // Handle terminated notifications (cold start)
+  /// Handle terminated notifications (cold start)
   await NotificationService.handleTerminatedNotifications();
 
   runApp(MyApp());
@@ -91,9 +97,9 @@ class _EntryPointState extends State<EntryPoint> {
     setState(() {});
   }
 
-  void getToken() {
-    FirebaseMessaging.instance.getToken().then((value) {
-      debugPrint("FIREBASE TOKEN IS :: :: $value");
+  void getToken() async {
+    await FirebaseMessaging.instance.getToken().then((token) {
+      debugPrint("FIREBASE TOKEN IS :: :: $token");
     });
   }
 
